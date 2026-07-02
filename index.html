@@ -3,31 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#FFFDF7">
+<meta name="theme-color" content="#FFF8F0">
 <title>傻毛宠物</title>
 <style>
+/* ========================================
+   设计系统 - 温暖治愈的宠物风格
+   ======================================== */
 :root {
-    --cream: #FFFDF7;
-    --warm-orange: #FF9F5A;
-    --warm-orange-light: #FFF0E5;
-    --mint-green: #7DCEA0;
-    --mint-light: #E8F5E9;
-    --warm-yellow: #FFD166;
-    --soft-pink: #FFB7B2;
-    --sky-blue: #A0E7E5;
-    --dark-gray: #4A4A4A;
-    --med-gray: #8E8E93;
-    --light-gray: #F5F5F5;
-    --border-gray: #E5E5EA;
-    --white: #FFFFFF;
-    --shadow: 0 2px 12px rgba(0,0,0,0.08);
-    --shadow-card: 0 4px 16px rgba(0,0,0,0.06);
+    /* 主色调 - 温暖橙色系 */
+    --primary: #FF8C5A;
+    --primary-light: #FFB088;
+    --primary-dark: #E87040;
+    --primary-bg: #FFF5EE;
+
+    /* 辅助色 */
+    --mint: #6BCB9B;
+    --mint-light: #E8F8F0;
+    --sky: #5EC4D4;
+    --sky-light: #E5F6F9;
+    --lavender: #9B8FE8;
+    --lavender-light: #F0EEFF;
+    --pink: #FF8E9E;
+    --pink-light: #FFF0F2;
+    --yellow: #FFD166;
+    --yellow-light: #FFF8E1;
+
+    /* 中性色 */
+    --text-primary: #2D2D3A;
+    --text-secondary: #6B6B7B;
+    --text-tertiary: #9B9BAB;
+    --bg-primary: #FFF8F0;
+    --bg-secondary: #FFFFFF;
+    --bg-tertiary: #F5F0EB;
+    --border: #E8E0D8;
+
+    /* 阴影 */
+    --shadow-sm: 0 2px 8px rgba(45,45,58,0.06);
+    --shadow-md: 0 4px 16px rgba(45,45,58,0.08);
+    --shadow-lg: 0 8px 32px rgba(45,45,58,0.12);
+    --shadow-glow: 0 4px 20px rgba(255,140,90,0.3);
+
+    /* 圆角 */
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 16px;
     --radius-xl: 20px;
+    --radius-2xl: 24px;
     --radius-pill: 999px;
-    --font: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+
+    /* 字体 */
+    --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -37,627 +62,2211 @@ html, body {
     height: 100%;
     overflow: hidden;
     font-family: var(--font);
-    background: #1a1a2e;
+    background: #F5F0EB;
     -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
 }
 
 /* ========================================
-   全局布局：每个page独立滚动，互不穿透
+   应用容器 - 手机模拟器样式
    ======================================== */
-
 .app {
     width: 100%;
-    max-width: 375px;
     height: 100%;
     display: flex;
     flex-direction: column;
-    background: var(--cream);
+    background: var(--bg-primary);
     position: relative;
-    margin: 0 auto;
-    box-shadow: 0 0 60px rgba(0,0,0,0.5);
+    overflow: hidden;
 }
 
-/* 内容区：只负责占位，不滚动 */
+/* 大屏幕：居中显示，手机模拟器样式 */
+@media (min-width: 500px) {
+    html, body {
+        background: #F5F0EB;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .app {
+        width: 390px;
+        height: 844px;
+        max-height: calc(100vh - 80px);
+        border-radius: 50px;
+        box-shadow:
+            0 0 0 12px #E8E0D8,
+            0 0 0 14px rgba(255,255,255,0.5),
+            0 20px 80px rgba(0,0,0,0.15),
+            inset 0 0 0 1px rgba(255,255,255,0.5);
+        position: relative;
+    }
+
+    /* 模拟刘海 */
+    .app::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 28px;
+        background: var(--bg-primary);
+        border-radius: 0 0 20px 20px;
+        z-index: 1001;
+    }
+
+    /* 底部横条 */
+    .app::after {
+        content: '';
+        position: absolute;
+        bottom: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 140px;
+        height: 5px;
+        background: rgba(0,0,0,0.15);
+        border-radius: 10px;
+        z-index: 1001;
+    }
+}
+
+/* 超大屏幕 */
+@media (min-width: 1200px) {
+    .app {
+        height: 900px;
+    }
+}
+
+/* ========================================
+   内容区与页面
+   ======================================== */
 .content-area {
     position: relative;
     flex: 1;
     overflow: hidden;
 }
 
-/* 页面：绝对定位占满content-area，各自独立滚动 */
 .page {
     display: none;
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: 0; left: 0; right: 0; bottom: 0;
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    background: var(--cream);
+    background: var(--bg-primary);
+    will-change: transform;
 }
+
 .page::-webkit-scrollbar { display: none; }
-.page.active { display: block; animation: pageIn 0.25s ease; }
 
-@keyframes pageIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
+.page.active {
+    display: block;
+    animation: slideIn 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* 底部导航 */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ========================================
+   底部导航 - 现代毛玻璃风格
+   ======================================== */
 .bottom-nav {
-    height: calc(64px + env(safe-area-inset-bottom, 0));
+    height: calc(72px + env(safe-area-inset-bottom, 0));
     padding-bottom: env(safe-area-inset-bottom, 0);
-    background: rgba(255,253,247,0.95);
-    backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(0,0,0,0.05);
+    background: rgba(255, 248, 240, 0.85);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-top: 1px solid rgba(232, 224, 216, 0.5);
     display: flex;
     justify-content: space-around;
     align-items: center;
     flex-shrink: 0;
     z-index: 100;
+    position: relative;
 }
 
-.nav-center-btn {
-    width: 48px; height: 48px;
+/* 大屏幕时底部导航有圆角 */
+@media (min-width: 500px) {
+    .bottom-nav {
+        border-radius: 0 0 38px 38px;
+    }
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.nav-item:active {
+    transform: scale(0.92);
+}
+
+.nav-icon {
+    font-size: 24px;
+    line-height: 1;
+    transition: all 0.2s ease;
+}
+
+.nav-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    transition: all 0.2s ease;
+}
+
+.nav-item.active .nav-label {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.nav-item.active::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 0 0 3px 3px;
+}
+
+/* AI中心按钮 - 突出显示 */
+.nav-ai-btn {
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--warm-orange), #FF7E3D);
-    color: var(--white);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
-    font-weight: 300;
+    font-size: 28px;
     cursor: pointer;
-    box-shadow: 0 4px 16px rgba(255,159,90,0.4);
-    transition: all 0.2s ease;
-    border: 3px solid var(--cream);
-    margin-top: -8px;
+    box-shadow: var(--shadow-glow);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border: 4px solid var(--bg-primary);
+    margin-top: -24px;
+    position: relative;
+    z-index: 10;
 }
-.nav-center-btn:active {
-    transform: scale(0.92);
-    box-shadow: 0 2px 8px rgba(255,159,90,0.3);
+
+.nav-ai-btn:active {
+    transform: scale(0.9);
+    box-shadow: 0 2px 12px rgba(255,140,90,0.4);
+}
+
+.nav-ai-btn::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-light), var(--primary));
+    z-index: -1;
+    animation: pulse 2s ease-in-out infinite;
+    opacity: 0.5;
 }
 
 /* ========================================
    通用组件
    ======================================== */
-
 .page-header {
-    padding: 10px 16px 12px;
+    padding: 12px 16px 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: sticky;
     top: 0;
-    background: var(--cream);
+    background: rgba(255, 248, 240, 0.9);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     z-index: 50;
+    border-bottom: 1px solid rgba(232, 224, 216, 0.3);
 }
-.page-header .title { font-size: 20px; font-weight: 700; color: var(--dark-gray); }
-.page-header .icon-btn {
-    width: 36px; height: 36px;
-    border-radius: var(--radius-pill);
-    background: var(--light-gray);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; cursor: pointer; border: none;
-    transition: transform 0.15s;
-}
-.page-header .icon-btn:active { transform: scale(0.9); }
 
+.page-header .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.page-header .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+.page-header .logo-text {
+    font-size: 20px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.header-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-pill);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.icon-btn:active {
+    transform: scale(0.92);
+    background: var(--bg-tertiary);
+}
+
+/* 搜索栏 */
 .search-bar {
-    margin: 0 16px 12px;
+    margin: 12px 16px 16px;
     position: relative;
 }
+
 .search-bar input {
-    width: 100%; height: 40px;
+    width: 100%;
+    height: 44px;
     border-radius: var(--radius-pill);
-    border: 1px solid var(--border-gray);
-    background: var(--white);
-    padding: 0 16px 0 40px;
-    font-size: 14px; color: var(--dark-gray);
-    font-family: var(--font); outline: none;
+    border: 1.5px solid var(--border);
+    background: var(--bg-secondary);
+    padding: 0 16px 0 44px;
+    font-size: 15px;
+    color: var(--text-primary);
+    font-family: var(--font);
+    outline: none;
+    transition: all 0.2s ease;
 }
+
+.search-bar input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(255,140,90,0.1);
+}
+
+.search-bar input::placeholder {
+    color: var(--text-tertiary);
+}
+
 .search-bar .search-icon {
-    position: absolute; left: 14px; top: 50%;
+    position: absolute;
+    left: 16px;
+    top: 50%;
     transform: translateY(-50%);
-    font-size: 16px; color: var(--med-gray);
+    font-size: 18px;
+    color: var(--text-tertiary);
 }
 
 /* AI入口卡片 */
 .ai-entry-card {
-    margin: 0 16px 12px;
-    padding: 14px 16px;
-    background: linear-gradient(135deg, #FFF0E5 0%, #FFE8D6 50%, #FFF5EE 100%);
-    border-radius: var(--radius-lg);
-    border: 1px solid rgba(255,159,90,0.15);
+    margin: 0 16px 16px;
+    padding: 16px;
+    background: linear-gradient(135deg, #FFF5EE 0%, #FFE8D6 100%);
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(255,140,90,0.15);
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(255,159,90,0.08);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
 }
+
+.ai-entry-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,140,90,0.1) 0%, transparent 70%);
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(-20px, 20px) rotate(5deg); }
+}
+
 .ai-entry-card:active {
     transform: scale(0.98);
-    box-shadow: 0 1px 4px rgba(255,159,90,0.06);
+    box-shadow: var(--shadow-md);
 }
+
 .ai-entry-avatar {
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--warm-orange), #FF7E3D);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
     flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(255,159,90,0.3);
+    box-shadow: var(--shadow-glow);
+    position: relative;
+    z-index: 1;
 }
+
 .ai-entry-text {
     flex: 1;
     min-width: 0;
+    position: relative;
+    z-index: 1;
 }
+
 .ai-entry-title {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
-    color: var(--dark-gray);
-    margin-bottom: 2px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
 }
+
 .ai-entry-subtitle {
-    font-size: 12px;
-    color: var(--med-gray);
-    margin-bottom: 6px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
 }
+
 .ai-entry-chips {
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
 }
+
 .ai-entry-chip {
     font-size: 11px;
-    padding: 3px 10px;
+    padding: 4px 10px;
     border-radius: var(--radius-pill);
-    background: var(--white);
-    color: var(--warm-orange);
-    border: 1px solid rgba(255,159,90,0.2);
+    background: var(--bg-secondary);
+    color: var(--primary);
+    border: 1px solid rgba(255,140,90,0.2);
     font-weight: 500;
 }
+
 .ai-entry-arrow {
-    width: 28px; height: 28px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background: var(--warm-orange);
-    color: var(--white);
+    background: var(--primary);
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 18px;
     flex-shrink: 0;
-    box-shadow: 0 2px 6px rgba(255,159,90,0.3);
+    box-shadow: var(--shadow-glow);
+    position: relative;
+    z-index: 1;
 }
 
+/* 分类标签 */
 .category-tabs {
-    display: flex; gap: 8px;
-    padding: 0 16px 12px;
-    overflow-x: auto; scrollbar-width: none;
+    display: flex;
+    gap: 8px;
+    padding: 0 16px 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
 }
-.category-tabs::-webkit-scrollbar { display: none; }
-.category-tab {
-    padding: 8px 16px;
-    border-radius: var(--radius-pill);
-    background: var(--white);
-    border: 1px solid var(--border-gray);
-    font-size: 13px; color: var(--med-gray);
-    white-space: nowrap; cursor: pointer;
-    font-family: var(--font); font-weight: 500;
-    transition: all 0.2s;
-}
-.category-tab.active { background: var(--warm-orange); color: var(--white); border-color: var(--warm-orange); }
-.category-tab:active { transform: scale(0.95); }
 
+.category-tabs::-webkit-scrollbar { display: none; }
+
+.category-tab {
+    padding: 10px 18px;
+    border-radius: var(--radius-pill);
+    background: var(--bg-secondary);
+    border: 1.5px solid var(--border);
+    font-size: 14px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    cursor: pointer;
+    font-family: var(--font);
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.category-tab.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    box-shadow: var(--shadow-glow);
+}
+
+.category-tab:active {
+    transform: scale(0.95);
+}
+
+/* 瀑布流 */
 .waterfall {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    padding: 0 16px 16px;
+    gap: 12px;
+    padding: 0 16px 20px;
 }
+
 .card {
-    background: var(--white);
+    background: var(--bg-secondary);
     border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: var(--shadow-card);
-    transition: transform 0.15s;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     cursor: pointer;
+    border: 1px solid rgba(232, 224, 216, 0.3);
 }
-.card:active { transform: scale(0.98); }
-.card-img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: var(--light-gray); }
-.card-body { padding: 10px; }
-.card-title { font-size: 13px; color: var(--dark-gray); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px; }
-.card-meta { display: flex; align-items: center; justify-content: space-between; }
-.card-author { display: flex; align-items: center; gap: 6px; }
-.card-avatar { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; }
-.card-name { font-size: 11px; color: var(--med-gray); }
-.card-likes { font-size: 11px; color: var(--med-gray); }
-.breed-tag-pill { display: inline-block; padding: 2px 8px; background: var(--mint-light); color: var(--mint-green); border-radius: var(--radius-pill); font-size: 10px; margin-bottom: 6px; font-weight: 500; }
-.expert-badge { display: inline-block; padding: 1px 6px; background: var(--sky-blue); color: #1a7a76; border-radius: var(--radius-pill); font-size: 9px; margin-bottom: 6px; font-weight: 600; }
+
+.card:active {
+    transform: scale(0.97);
+    box-shadow: var(--shadow-md);
+}
+
+.card-img {
+    width: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
+    display: block;
+    background: var(--bg-tertiary);
+    min-height: 120px;
+    max-height: 200px;
+}
+
+.card-body {
+    padding: 12px;
+}
+
+.card-breed-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background: var(--mint-light);
+    color: var(--mint);
+    border-radius: var(--radius-pill);
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.card-title {
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-author {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid var(--border);
+}
+
+.card-name {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.card-likes {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: var(--radius-pill);
+    transition: all 0.2s ease;
+}
+
+.card-likes:active {
+    background: var(--pink-light);
+    color: var(--pink);
+}
 
 /* ========================================
-   AI 页面：全新设计
+   AI 页面 - 现代对话风格
    ======================================== */
-
 .page-ai {
     display: none;
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     overflow: hidden;
-    background: var(--cream);
+    background: var(--bg-primary);
     flex-direction: column;
 }
-.page-ai.active { display: flex; animation: pageIn 0.25s ease; }
+
+.page-ai.active {
+    display: flex;
+    animation: slideIn 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
 
 .ai-header {
-    background: linear-gradient(135deg, var(--warm-orange), #FF7E3D);
-    padding: 16px;
-    padding-top: calc(16px + env(safe-area-inset-top, 0));
-    color: var(--white);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    padding: 20px 16px;
+    padding-top: calc(20px + env(safe-area-inset-top, 0));
+    color: white;
     text-align: center;
     position: relative;
     flex-shrink: 0;
     z-index: 10;
 }
+
+.ai-header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: var(--bg-primary);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
 .ai-header-back {
     position: absolute;
     left: 16px;
-    top: calc(16px + env(safe-area-inset-top, 0));
-    width: 36px; height: 36px;
+    top: calc(20px + env(safe-area-inset-top, 0));
+    width: 40px;
+    height: 40px;
     background: rgba(255,255,255,0.2);
     backdrop-filter: blur(8px);
     border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px; cursor: pointer; border: none; color: var(--white);
-    transition: transform 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    border: none;
+    color: white;
+    transition: all 0.2s ease;
 }
-.ai-header-back:active { transform: scale(0.9); }
-.ai-header-avatar {
-    width: 56px; height: 56px;
-    background: var(--white);
-    border-radius: 50%;
-    margin: 0 auto 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 32px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-    border: 3px solid rgba(255,255,255,0.3);
-}
-.ai-header-name { font-size: 17px; font-weight: 700; }
-.ai-header-subtitle { font-size: 12px; opacity: 0.9; margin-top: 2px; }
 
+.ai-header-back:active {
+    transform: scale(0.9);
+    background: rgba(255,255,255,0.3);
+}
+
+.ai-header-avatar {
+    width: 64px;
+    height: 64px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    border: 3px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(8px);
+}
+
+.ai-header-name {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.ai-header-subtitle {
+    font-size: 13px;
+    opacity: 0.9;
+    margin-top: 4px;
+}
+
+.ai-header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    background: rgba(255,255,255,0.2);
+    border-radius: var(--radius-pill);
+    font-size: 11px;
+    margin-top: 8px;
+    backdrop-filter: blur(8px);
+}
+
+/* 聊天区域 */
 .ai-chat-area {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    padding: 16px;
+    padding: 24px 16px 16px;
     scrollbar-width: none;
 }
+
 .ai-chat-area::-webkit-scrollbar { display: none; }
 
 .chat-message {
     display: flex;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
     align-items: flex-start;
-    animation: msgIn 0.3s ease;
+    animation: fadeInUp 0.3s ease;
 }
-@keyframes msgIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+
+.chat-message.user {
+    justify-content: flex-end;
 }
-.chat-message.user { justify-content: flex-end; }
 
 .chat-avatar {
-    width: 36px; height: 36px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: var(--white);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
     flex-shrink: 0;
-    margin-right: 10px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    border: 1px solid var(--border-gray);
+    margin-right: 12px;
+    box-shadow: var(--shadow-sm);
 }
-.chat-message.user .chat-avatar { display: none; }
+
+.chat-message.user .chat-avatar {
+    display: none;
+}
 
 .chat-bubble {
-    max-width: 75%;
-    padding: 12px 16px;
-    border-radius: 18px;
-    font-size: 14px;
+    max-width: 80%;
+    padding: 14px 18px;
+    border-radius: var(--radius-xl);
+    font-size: 15px;
     line-height: 1.6;
     word-break: break-word;
 }
+
 .chat-bubble.ai {
-    background: var(--white);
-    color: var(--dark-gray);
-    border: 1px solid var(--border-gray);
-    border-bottom-left-radius: 4px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
 }
+
 .chat-bubble.user {
-    background: linear-gradient(135deg, var(--warm-orange), #FF7E3D);
-    color: var(--white);
-    border-bottom-right-radius: 4px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border-bottom-right-radius: var(--radius-sm);
+    box-shadow: var(--shadow-glow);
 }
+
 .chat-source {
-    font-size: 11px; color: var(--med-gray);
-    margin-top: 6px; display: flex; align-items: center; gap: 4px;
-    padding-left: 46px;
-}
-.chat-disclaimer {
-    font-size: 11px; color: #D32F2F;
-    background: #FFEBEE;
-    padding: 8px 12px;
-    border-radius: var(--radius-md);
+    font-size: 12px;
+    color: var(--text-tertiary);
     margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-left: 52px;
+}
+
+.chat-disclaimer {
+    font-size: 12px;
+    color: #E65100;
+    background: #FFF3E0;
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    margin-top: 10px;
     display: inline-block;
-    margin-left: 46px;
+    margin-left: 52px;
+    border: 1px solid #FFE0B2;
 }
 
 .chat-time {
     text-align: center;
-    font-size: 11px;
-    color: var(--med-gray);
-    margin: 8px 0;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin: 12px 0;
     opacity: 0.7;
 }
 
+/* AI加载动画 */
 .ai-loading {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 16px;
-    background: var(--white);
-    border: 1px solid var(--border-gray);
-    border-radius: 18px;
-    border-bottom-left-radius: 4px;
-    max-width: 160px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-    margin-left: 46px;
+    gap: 6px;
+    padding: 14px 18px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    border-bottom-left-radius: var(--radius-sm);
+    max-width: 100px;
+    box-shadow: var(--shadow-sm);
+    margin-left: 52px;
 }
+
 .ai-loading .dot {
-    width: 8px; height: 8px;
-    background: var(--med-gray);
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
     border-radius: 50%;
     animation: dotBounce 1.4s ease-in-out infinite;
 }
+
 .ai-loading .dot:nth-child(1) { animation-delay: 0s; }
 .ai-loading .dot:nth-child(2) { animation-delay: 0.2s; }
 .ai-loading .dot:nth-child(3) { animation-delay: 0.4s; }
+
 @keyframes dotBounce {
     0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
     40% { transform: scale(1); opacity: 1; }
 }
 
+/* AI输入区域 */
 .ai-input-area {
-    padding: 12px 16px;
-    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0));
-    background: var(--white);
-    border-top: 1px solid var(--border-gray);
+    padding: 16px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0));
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
     flex-shrink: 0;
     z-index: 10;
 }
+
 .ai-quick-chips {
     display: flex;
     gap: 8px;
     overflow-x: auto;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     scrollbar-width: none;
     padding-bottom: 4px;
 }
+
 .ai-quick-chips::-webkit-scrollbar { display: none; }
+
 .ai-chip {
-    padding: 8px 14px;
-    background: var(--cream);
-    border: 1px solid var(--border-gray);
+    padding: 10px 16px;
+    background: var(--bg-primary);
+    border: 1.5px solid var(--border);
     border-radius: var(--radius-pill);
-    font-size: 13px; color: var(--dark-gray);
-    white-space: nowrap; cursor: pointer;
+    font-size: 13px;
+    color: var(--text-primary);
+    white-space: nowrap;
+    cursor: pointer;
     font-family: var(--font);
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     flex-shrink: 0;
 }
-.ai-chip:hover { background: var(--warm-orange-light); border-color: var(--warm-orange); color: var(--warm-orange); }
-.ai-chip:active { transform: scale(0.95); }
+
+.ai-chip:hover,
+.ai-chip:active {
+    background: var(--primary-bg);
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: scale(0.97);
+}
 
 .ai-input-bar {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     align-items: center;
-    background: var(--cream);
+    background: var(--bg-primary);
     border-radius: var(--radius-pill);
-    padding: 4px 4px 4px 12px;
-    border: 1px solid var(--border-gray);
+    padding: 6px 6px 6px 16px;
+    border: 1.5px solid var(--border);
+    transition: all 0.2s ease;
 }
+
+.ai-input-bar:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(255,140,90,0.1);
+}
+
 .ai-input-bar input {
-    flex: 1; border: none; outline: none;
-    font-size: 15px; font-family: var(--font);
-    background: transparent; color: var(--dark-gray);
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    font-family: var(--font);
+    background: transparent;
+    color: var(--text-primary);
     min-width: 0;
 }
-.ai-input-bar input::placeholder { color: var(--med-gray); }
-.ai-input-bar .mic-btn {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: var(--light-gray);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; cursor: pointer; flex-shrink: 0;
-    border: none; color: var(--dark-gray);
-    transition: transform 0.15s;
+
+.ai-input-bar input::placeholder {
+    color: var(--text-tertiary);
 }
-.ai-input-bar .mic-btn:active { transform: scale(0.9); }
+
 .ai-input-bar .send-btn {
-    width: 36px; height: 36px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--warm-orange), #FF7E3D);
-    display: flex; align-items: center; justify-content: center;
-    color: var(--white); font-size: 16px; cursor: pointer;
-    flex-shrink: 0; border: none;
-    transition: transform 0.15s;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    flex-shrink: 0;
+    border: none;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-glow);
 }
-.ai-input-bar .send-btn:active { transform: scale(0.9); }
+
+.ai-input-bar .send-btn:active {
+    transform: scale(0.9);
+}
 
 /* ========================================
    品种百科
    ======================================== */
+.breed-list {
+    padding: 0 16px 20px;
+}
 
-.breed-list { padding: 0 16px 16px; }
-.breed-category-section { margin-bottom: 20px; }
-.breed-category-title { font-size: 16px; font-weight: 700; color: var(--dark-gray); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-.breed-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.breed-item { background: var(--white); border-radius: var(--radius-md); padding: 12px 8px; text-align: center; box-shadow: var(--shadow); cursor: pointer; transition: transform 0.15s; border: 1px solid var(--border-gray); }
-.breed-item:active { transform: scale(0.95); }
-.breed-item-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; border: 2px solid var(--warm-orange-light); background: var(--light-gray); }
-.breed-item-name { font-size: 13px; font-weight: 600; color: var(--dark-gray); }
-.breed-item-en { font-size: 10px; color: var(--med-gray); margin-top: 2px; }
+.breed-category-section {
+    margin-bottom: 24px;
+}
 
-.breed-hero { position: relative; height: 280px; overflow: hidden; }
-.breed-hero-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.breed-hero-overlay { position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent); }
-.breed-hero-info { position: absolute; bottom: 16px; left: 16px; right: 16px; color: var(--white); }
-.breed-hero-name { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
-.breed-hero-en { font-size: 13px; opacity: 0.8; }
-.breed-hero-fav { position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 20px; cursor: pointer; border: none; }
-.breed-info-card { background: var(--white); border-radius: var(--radius-xl) var(--radius-xl) 0 0; margin-top: -20px; position: relative; z-index: 10; padding: 20px 16px 100px; }
-.breed-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-.badge { padding: 6px 12px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 4px; }
-.badge-orange { background: var(--warm-orange-light); color: var(--warm-orange); }
+.breed-category-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.breed-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.breed-item {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: 16px 12px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border: 1px solid rgba(232, 224, 216, 0.3);
+}
+
+.breed-item:active {
+    transform: scale(0.95);
+    box-shadow: var(--shadow-md);
+}
+
+.breed-item-img {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 3px solid var(--primary-bg);
+    background: var(--bg-tertiary);
+}
+
+.breed-item-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.breed-item-en {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    margin-top: 3px;
+}
+
+/* 品种详情 */
+.breed-hero {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+}
+
+.breed-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.breed-hero-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+}
+
+.breed-hero-info {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    color: white;
+}
+
+.breed-hero-name {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.breed-hero-en {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.breed-hero-fav {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(12px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.breed-hero-fav:active {
+    transform: scale(0.9);
+    background: rgba(255,255,255,0.3);
+}
+
+.breed-info-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+    margin-top: -24px;
+    position: relative;
+    z-index: 10;
+    padding: 24px 20px 120px;
+}
+
+.breed-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.badge {
+    padding: 8px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.badge-orange { background: var(--primary-bg); color: var(--primary); }
 .badge-mint { background: var(--mint-light); color: #2e7d52; }
-.badge-yellow { background: #FFF8E1; color: #F9A825; }
-.badge-blue { background: #E3F2FD; color: #1976D2; }
-.badge-pink { background: #FCE4EC; color: #C2185B; }
-.breed-tabs { display: flex; border-bottom: 1px solid var(--border-gray); margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }
-.breed-tabs::-webkit-scrollbar { display: none; }
-.breed-tab { flex: 1; min-width: 80px; padding: 12px 0; text-align: center; font-size: 14px; color: var(--med-gray); cursor: pointer; position: relative; font-weight: 500; transition: color 0.2s; border: none; background: none; font-family: var(--font); white-space: nowrap; }
-.breed-tab.active { color: var(--warm-orange); }
-.breed-tab.active::after { content: ''; position: absolute; bottom: 0; left: 20%; right: 20%; height: 3px; background: var(--warm-orange); border-radius: 3px 3px 0 0; }
-.breed-tab-content { display: none; }
-.breed-tab-content.active { display: block; }
+.badge-yellow { background: var(--yellow-light); color: #F9A825; }
+.badge-blue { background: var(--sky-light); color: #1976D2; }
+.badge-pink { background: var(--pink-light); color: #C2185B; }
 
-.info-section { margin-bottom: 20px; }
-.info-section-title { font-size: 16px; font-weight: 700; color: var(--dark-gray); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-.info-card { background: var(--light-gray); border-radius: var(--radius-md); padding: 14px; margin-bottom: 10px; }
-.info-card-title { font-size: 14px; font-weight: 600; color: var(--dark-gray); margin-bottom: 8px; }
-.info-card-text { font-size: 13px; color: var(--med-gray); line-height: 1.7; }
-.warning-card { background: #FFF3E0; border: 1px solid #FFE0B2; border-radius: var(--radius-md); padding: 14px; margin-bottom: 10px; }
-.warning-card-title { font-size: 14px; font-weight: 600; color: #E65100; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-.warning-card-text { font-size: 13px; color: #BF360C; line-height: 1.7; }
-.food-tag { display: inline-block; padding: 6px 14px; background: var(--white); border: 1px solid var(--mint-green); color: var(--mint-green); border-radius: var(--radius-pill); font-size: 13px; margin: 4px; font-weight: 500; }
-.food-tag.forbidden { border-color: var(--soft-pink); color: #D32F2F; background: #FFEBEE; }
-.breed-action-bar { position: absolute; bottom: calc(16px + env(safe-area-inset-bottom, 0)); left: 50%; transform: translateX(-50%); width: min(343px, calc(100% - 32px)); display: flex; gap: 10px; z-index: 90; }
-.breed-action-bar .btn { flex: 1; height: 48px; border-radius: var(--radius-pill); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; cursor: pointer; border: none; font-family: var(--font); transition: transform 0.15s; box-shadow: var(--shadow); }
-.breed-action-bar .btn:active { transform: scale(0.96); }
-.btn-mint { background: var(--mint-green); color: var(--white); }
-.btn-orange { background: linear-gradient(135deg, var(--warm-orange), #FF7E3D); color: var(--white); }
-.back-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; position: absolute; top: 52px; left: 16px; z-index: 100; box-shadow: var(--shadow); border: none; transition: transform 0.15s; }
-.back-btn:active { transform: scale(0.9); }
+.breed-tabs {
+    display: flex;
+    border-bottom: 2px solid var(--bg-tertiary);
+    margin-bottom: 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.breed-tabs::-webkit-scrollbar { display: none; }
+
+.breed-tab {
+    flex: 1;
+    min-width: 80px;
+    padding: 14px 0;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    position: relative;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: none;
+    background: none;
+    font-family: var(--font);
+    white-space: nowrap;
+}
+
+.breed-tab.active {
+    color: var(--primary);
+}
+
+.breed-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 20%;
+    right: 20%;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 3px 3px 0 0;
+}
+
+.breed-tab-content {
+    display: none;
+}
+
+.breed-tab-content.active {
+    display: block;
+    animation: fadeInUp 0.3s ease;
+}
+
+.info-section {
+    margin-bottom: 24px;
+}
+
+.info-section-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-card {
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
+.info-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.info-card-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+.warning-card {
+    background: #FFF3E0;
+    border: 1px solid #FFE0B2;
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
+.warning-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #E65100;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.warning-card-text {
+    font-size: 14px;
+    color: #BF360C;
+    line-height: 1.7;
+}
+
+.food-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    background: var(--bg-secondary);
+    border: 1.5px solid var(--mint);
+    color: var(--mint);
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    margin: 4px;
+    font-weight: 500;
+}
+
+.food-tag.forbidden {
+    border-color: var(--pink);
+    color: #D32F2F;
+    background: var(--pink-light);
+}
+
+.breed-action-bar {
+    position: absolute;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0));
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    max-width: 350px;
+    display: flex;
+    gap: 12px;
+    z-index: 90;
+}
+
+.breed-action-bar .btn {
+    flex: 1;
+    height: 52px;
+    border-radius: var(--radius-pill);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    font-family: var(--font);
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-md);
+}
+
+.breed-action-bar .btn:active {
+    transform: scale(0.97);
+}
+
+.btn-mint {
+    background: var(--mint);
+    color: white;
+}
+
+.btn-orange {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    box-shadow: var(--shadow-glow);
+}
+
+.back-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    position: absolute;
+    top: calc(16px + env(safe-area-inset-top, 0));
+    left: 16px;
+    z-index: 100;
+    box-shadow: var(--shadow-md);
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.back-btn:active {
+    transform: scale(0.9);
+}
 
 /* ========================================
-   商城、个人中心、发布
+   发布页
    ======================================== */
+.publish-header {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-secondary);
+}
 
-.shop-banner { margin: 0 16px 16px; background: linear-gradient(135deg, var(--warm-orange), #FF7E3D); border-radius: var(--radius-lg); padding: 16px; color: var(--white); display: flex; align-items: center; gap: 12px; }
-.shop-banner-avatar { width: 48px; height: 48px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.5); object-fit: cover; background: var(--light-gray); }
-.shop-banner-title { font-size: 15px; font-weight: 600; }
-.shop-banner-sub { font-size: 12px; opacity: 0.9; margin-top: 2px; }
-.shop-categories { display: flex; gap: 10px; padding: 0 16px 16px; overflow-x: auto; scrollbar-width: none; }
+.publish-close {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    border: none;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+
+.publish-close:active {
+    transform: scale(0.9);
+}
+
+.publish-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.publish-submit {
+    padding: 10px 24px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: var(--radius-pill);
+    font-size: 15px;
+    font-weight: 600;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-glow);
+}
+
+.publish-submit:active {
+    transform: scale(0.95);
+}
+
+.publish-form {
+    padding: 20px;
+}
+
+.publish-textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-family: var(--font);
+    resize: none;
+    min-height: 150px;
+    color: var(--text-primary);
+    background: transparent;
+    line-height: 1.6;
+}
+
+.publish-textarea::placeholder {
+    color: var(--text-tertiary);
+}
+
+.publish-photos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.publish-photo-item {
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    position: relative;
+    background: var(--bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px dashed var(--border);
+}
+
+.publish-photo-item:active {
+    transform: scale(0.95);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.publish-photo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.publish-options {
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+}
+
+.publish-option {
+    display: flex;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(232, 224, 216, 0.5);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.publish-option:active {
+    background: var(--bg-tertiary);
+    margin: 0 -20px;
+    padding: 14px 20px;
+}
+
+.publish-option-icon {
+    font-size: 22px;
+    margin-right: 14px;
+    width: 28px;
+    text-align: center;
+}
+
+.publish-option-text {
+    flex: 1;
+    font-size: 15px;
+    color: var(--text-primary);
+}
+
+.publish-option-value {
+    font-size: 14px;
+    color: var(--text-tertiary);
+}
+
+/* ========================================
+   商城
+   ======================================== */
+.shop-banner {
+    margin: 0 16px 20px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: var(--radius-xl);
+    padding: 20px;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow-glow);
+}
+
+.shop-banner-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 3px solid rgba(255,255,255,0.3);
+    object-fit: cover;
+    background: var(--bg-tertiary);
+}
+
+.shop-banner-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.shop-banner-sub {
+    font-size: 13px;
+    opacity: 0.9;
+    margin-top: 4px;
+}
+
+.shop-categories {
+    display: flex;
+    gap: 12px;
+    padding: 0 16px 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
 .shop-categories::-webkit-scrollbar { display: none; }
-.shop-cat { padding: 10px 16px; background: var(--white); border-radius: var(--radius-md); display: flex; flex-direction: column; align-items: center; gap: 4px; box-shadow: var(--shadow); min-width: 60px; cursor: pointer; transition: transform 0.15s; }
-.shop-cat:active { transform: scale(0.95); }
-.shop-cat-icon { font-size: 24px; }
-.shop-cat-name { font-size: 11px; color: var(--dark-gray); font-weight: 500; }
-.shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 16px 16px; }
-.shop-card { background: var(--white); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-card); cursor: pointer; transition: transform 0.15s; }
-.shop-card:active { transform: scale(0.98); }
-.shop-card-img { width: 100%; aspect-ratio: 1; object-fit: cover; background: var(--light-gray); display: block; }
-.shop-card-body { padding: 10px; }
-.shop-card-title { font-size: 13px; color: var(--dark-gray); margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
-.shop-card-price { display: flex; align-items: baseline; gap: 6px; }
-.shop-price-current { font-size: 16px; font-weight: 700; color: var(--warm-orange); }
-.shop-price-original { font-size: 12px; color: var(--med-gray); text-decoration: line-through; }
-.shop-card-tags { display: flex; gap: 4px; margin-top: 8px; }
-.shop-card-tag { padding: 2px 6px; background: var(--warm-orange-light); color: var(--warm-orange); border-radius: var(--radius-sm); font-size: 10px; font-weight: 500; }
-.shop-card-tag.hot { background: #FFEBEE; color: #D32F2F; }
 
-.publish-form { padding: 16px 16px 16px; }
-.publish-textarea { width: 100%; border: none; outline: none; font-size: 16px; font-family: var(--font); resize: none; min-height: 120px; color: var(--dark-gray); background: transparent; }
-.publish-textarea::placeholder { color: var(--med-gray); }
-.publish-photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 16px 0; }
-.publish-photo-item { aspect-ratio: 1; border-radius: var(--radius-md); overflow: hidden; position: relative; background: var(--light-gray); display: flex; align-items: center; justify-content: center; font-size: 32px; color: var(--med-gray); cursor: pointer; transition: transform 0.15s; }
-.publish-photo-item:active { transform: scale(0.95); }
-.publish-photo-item img { width: 100%; height: 100%; object-fit: cover; }
-.publish-options { border-top: 1px solid var(--border-gray); padding-top: 16px; }
-.publish-option { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-gray); cursor: pointer; }
-.publish-option-icon { font-size: 20px; margin-right: 12px; width: 24px; text-align: center; }
-.publish-option-text { flex: 1; font-size: 14px; color: var(--dark-gray); }
-.publish-option-value { font-size: 13px; color: var(--med-gray); }
+.shop-cat {
+    padding: 12px 16px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    box-shadow: var(--shadow-sm);
+    min-width: 70px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(232, 224, 216, 0.3);
+}
 
-.profile-header { background: linear-gradient(135deg, #FFE0B2, var(--warm-orange-light)); padding: 24px 16px 32px; position: relative; overflow: hidden; }
-.profile-info { display: flex; align-items: center; gap: 16px; position: relative; z-index: 1; }
-.profile-avatar { width: 72px; height: 72px; border-radius: 50%; border: 3px solid var(--white); object-fit: cover; box-shadow: var(--shadow); background: var(--light-gray); }
-.profile-text { flex: 1; }
-.profile-name { font-size: 20px; font-weight: 700; color: var(--dark-gray); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
-.profile-level { font-size: 12px; color: var(--warm-orange); background: var(--white); padding: 2px 8px; border-radius: var(--radius-pill); font-weight: 600; }
-.profile-id { font-size: 12px; color: var(--med-gray); }
-.profile-stats { display: flex; justify-content: space-around; padding: 16px 0; margin: 0 16px; background: var(--white); border-radius: var(--radius-md); box-shadow: var(--shadow); margin-top: -16px; position: relative; z-index: 2; }
-.profile-stat { text-align: center; }
-.profile-stat-value { font-size: 18px; font-weight: 700; color: var(--dark-gray); }
-.profile-stat-label { font-size: 12px; color: var(--med-gray); margin-top: 2px; }
-.profile-menu { padding: 16px 16px 16px; }
-.menu-group { background: var(--white); border-radius: var(--radius-md); margin-bottom: 12px; overflow: hidden; box-shadow: var(--shadow-card); }
-.menu-item { display: flex; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--border-gray); cursor: pointer; transition: background 0.15s; }
-.menu-item:last-child { border-bottom: none; }
-.menu-item:active { background: var(--light-gray); }
-.menu-icon { width: 32px; height: 32px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-right: 12px; }
-.menu-text { flex: 1; font-size: 14px; color: var(--dark-gray); }
-.menu-arrow { font-size: 14px; color: var(--med-gray); }
-.pet-card { background: var(--white); border-radius: var(--radius-md); padding: 14px; margin-bottom: 12px; box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 12px; }
-.pet-card-avatar { width: 56px; height: 56px; border-radius: var(--radius-md); object-fit: cover; background: var(--light-gray); }
-.pet-card-info { flex: 1; }
-.pet-card-name { font-size: 16px; font-weight: 600; color: var(--dark-gray); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
-.pet-card-breed { font-size: 12px; color: var(--med-gray); margin-bottom: 4px; }
-.pet-card-tags { display: flex; gap: 6px; }
-.pet-card-tag { padding: 2px 8px; background: var(--mint-light); color: #2e7d52; border-radius: var(--radius-pill); font-size: 11px; }
+.shop-cat:active {
+    transform: scale(0.95);
+    box-shadow: var(--shadow-md);
+}
 
-.disclaimer { background: #FFF8E1; border: 1px solid #FFECB3; border-radius: var(--radius-md); padding: 12px 14px; font-size: 12px; color: #F57F17; line-height: 1.6; margin: 16px 0; display: flex; align-items: flex-start; gap: 8px; }
-.disclaimer .icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-.pull-hint { text-align: center; padding: 12px; font-size: 12px; color: var(--med-gray); }
+.shop-cat-icon {
+    font-size: 28px;
+}
+
+.shop-cat-name {
+    font-size: 12px;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.shop-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 0 16px 20px;
+}
+
+.shop-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border: 1px solid rgba(232, 224, 216, 0.3);
+}
+
+.shop-card:active {
+    transform: scale(0.97);
+    box-shadow: var(--shadow-md);
+}
+
+.shop-card-img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    background: var(--bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+}
+
+.shop-card-body {
+    padding: 12px;
+}
+
+.shop-card-title {
+    font-size: 14px;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+.shop-card-price {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.shop-price-current {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.shop-price-original {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    text-decoration: line-through;
+}
+
+.shop-card-tags {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.shop-card-tag {
+    padding: 4px 8px;
+    background: var(--primary-bg);
+    color: var(--primary);
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.shop-card-tag.hot {
+    background: var(--pink-light);
+    color: #D32F2F;
+}
+
+/* ========================================
+   个人中心
+   ======================================== */
+.profile-header {
+    background: linear-gradient(135deg, #FFE0B2 0%, var(--primary-bg) 100%);
+    padding: 30px 20px 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: var(--bg-primary);
+    border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    position: relative;
+    z-index: 1;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid var(--bg-secondary);
+    object-fit: cover;
+    box-shadow: var(--shadow-md);
+    background: var(--bg-tertiary);
+}
+
+.profile-text {
+    flex: 1;
+}
+
+.profile-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-level {
+    font-size: 12px;
+    color: var(--primary);
+    background: var(--bg-secondary);
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
+}
+
+.profile-id {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.profile-stats {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+    margin: 0 20px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    margin-top: -20px;
+    position: relative;
+    z-index: 2;
+}
+
+.profile-stat {
+    text-align: center;
+}
+
+.profile-stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.profile-stat-label {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin-top: 4px;
+}
+
+.profile-menu {
+    padding: 24px 20px;
+}
+
+.menu-group-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pet-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 1px solid rgba(232, 224, 216, 0.3);
+}
+
+.pet-card-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-lg);
+    object-fit: cover;
+    background: var(--bg-tertiary);
+}
+
+.pet-card-info {
+    flex: 1;
+}
+
+.pet-card-name {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pet-card-breed {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.pet-card-tags {
+    display: flex;
+    gap: 8px;
+}
+
+.pet-card-tag {
+    padding: 4px 10px;
+    background: var(--mint-light);
+    color: #2e7d52;
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.pet-card-add {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 2px dashed var(--border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pet-card-add:active {
+    border-color: var(--primary);
+    background: var(--primary-bg);
+}
+
+.pet-card-add-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-lg);
+    background: var(--bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: var(--text-tertiary);
+}
+
+.pet-card-add-text {
+    font-size: 16px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.pet-card-add-sub {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin-top: 4px;
+}
+
+.menu-group {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    margin-bottom: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(232, 224, 216, 0.3);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid rgba(232, 224, 216, 0.5);
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.menu-item:last-child {
+    border-bottom: none;
+}
+
+.menu-item:active {
+    background: var(--bg-tertiary);
+}
+
+.menu-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-right: 14px;
+}
+
+.menu-text {
+    flex: 1;
+    font-size: 15px;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.menu-arrow {
+    font-size: 16px;
+    color: var(--text-tertiary);
+}
 
 /* ========================================
    Toast、Lightbox、浮动按钮
    ======================================== */
+.toast-container {
+    position: fixed;
+    top: calc(60px + env(safe-area-inset-top, 0));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
 
-.toast-container { position: absolute; top: calc(52px + env(safe-area-inset-top, 0)); left: 50%; transform: translateX(-50%); z-index: 9999; pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.toast { background: rgba(74, 74, 74, 0.92); backdrop-filter: blur(10px); color: var(--white); padding: 10px 20px; border-radius: var(--radius-pill); font-size: 14px; font-weight: 500; animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards; max-width: 280px; text-align: center; line-height: 1.5; }
-@keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
-@keyframes toastOut { from { opacity: 1; transform: translateX(-50%) translateY(0); } to { opacity: 0; transform: translateX(-50%) translateY(-20px); } }
+/* 大屏幕时toast在手机内部 */
+@media (min-width: 500px) {
+    .toast-container {
+        position: absolute;
+    }
+}
 
-.lightbox { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.92); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-.lightbox.active { opacity: 1; pointer-events: all; }
-.lightbox img { max-width: 90%; max-height: 80%; object-fit: contain; border-radius: var(--radius-md); }
-.lightbox-close { position: absolute; top: calc(16px + env(safe-area-inset-top, 0)); right: 16px; width: 40px; height: 40px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 20px; cursor: pointer; z-index: 10000; border: none; }
+.toast {
+    background: rgba(45, 45, 58, 0.92);
+    backdrop-filter: blur(12px);
+    color: white;
+    padding: 12px 24px;
+    border-radius: var(--radius-pill);
+    font-size: 14px;
+    font-weight: 500;
+    animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+    max-width: 280px;
+    text-align: center;
+    line-height: 1.5;
+    box-shadow: var(--shadow-lg);
+}
 
-.ai-float-btn { position: absolute; right: 16px; bottom: calc(80px + env(safe-area-inset-bottom, 0)); width: 52px; height: 52px; background: linear-gradient(135deg, var(--warm-orange), #FF7E3D); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 16px rgba(255,159,90,0.4); cursor: pointer; z-index: 80; transition: all 0.3s; border: 3px solid var(--cream); }
-.ai-float-btn:active { transform: scale(0.92); }
+@keyframes toastIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes toastOut {
+    from { opacity: 1; transform: translateX(-50%) translateY(0); }
+    to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+}
+
+.lightbox {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.lightbox.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.lightbox img {
+    max-width: 90%;
+    max-height: 80%;
+    object-fit: contain;
+    border-radius: var(--radius-lg);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: calc(20px + env(safe-area-inset-top, 0));
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(12px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 10000;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.lightbox-close:active {
+    transform: scale(0.9);
+    background: rgba(255,255,255,0.25);
+}
+
+.ai-float-btn {
+    position: absolute;
+    right: 20px;
+    bottom: calc(90px + env(safe-area-inset-bottom, 0));
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    box-shadow: var(--shadow-glow);
+    cursor: pointer;
+    z-index: 80;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border: 3px solid var(--bg-primary);
+}
+
+.ai-float-btn:active {
+    transform: scale(0.9);
+}
+
+.disclaimer {
+    background: var(--yellow-light);
+    border: 1px solid #FFECB3;
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+    font-size: 13px;
+    color: #F57F17;
+    line-height: 1.6;
+    margin: 16px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.disclaimer .icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.pull-hint {
+    text-align: center;
+    padding: 16px;
+    font-size: 13px;
+    color: var(--text-tertiary);
+}
+
+/* ========================================
+   会员弹窗
+   ======================================== */
+.modal-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 9998;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-content {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+    width: 100%;
+    max-height: 80%;
+    overflow-y: auto;
+    padding: 24px;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.modal-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+
+.modal-close:active {
+    transform: scale(0.9);
+}
+
+.member-card {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    color: white;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.member-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+}
+
+.member-card-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+}
+
+.member-card-desc {
+    font-size: 14px;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+}
+
+.member-price {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.member-price-current {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.member-price-unit {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.member-price-original {
+    font-size: 16px;
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.member-features {
+    margin-bottom: 24px;
+}
+
+.member-feature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(232, 224, 216, 0.5);
+}
+
+.member-feature:last-child {
+    border-bottom: none;
+}
+
+.member-feature-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background: var(--primary-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.member-feature-text {
+    flex: 1;
+}
+
+.member-feature-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.member-feature-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.member-cta {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: var(--radius-pill);
+    font-size: 17px;
+    font-weight: 600;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-glow);
+}
+
+.member-cta:active {
+    transform: scale(0.97);
+}
 </style>
 </head>
 <body>
 <div class="app">
-    <!-- 内容区：每个page绝对定位，各自独立滚动 -->
+    <!-- 内容区 -->
     <div class="content-area">
 
         <!-- ======== 首页 ======== -->
         <div class="page active" id="page-home">
             <div class="page-header">
-                <div class="title" style="display:flex;align-items:center;gap:6px;">
-                    <span>🐾</span> 傻毛宠物
+                <div class="logo">
+                    <div class="logo-icon">🐾</div>
+                    <div class="logo-text">傻毛宠物</div>
                 </div>
-                <div class="icon-btn">🔔</div>
+                <div class="header-actions">
+                    <div class="icon-btn">🔔</div>
+                    <div class="icon-btn">💬</div>
+                </div>
             </div>
 
             <div class="search-bar">
@@ -680,117 +2289,31 @@ html, body {
             </div>
 
             <div class="category-tabs">
-                <div class="category-tab active">推荐</div>
-                <div class="category-tab">关注</div>
-                <div class="category-tab">🐕 金毛</div>
-                <div class="category-tab">🐱 布偶</div>
-                <div class="category-tab">🐕 柯基</div>
-                <div class="category-tab">🐰 异宠</div>
+                <div class="category-tab active" onclick="switchTab(this)">推荐</div>
+                <div class="category-tab" onclick="switchTab(this)">关注</div>
+                <div class="category-tab" onclick="switchTab(this)">🐕 金毛</div>
+                <div class="category-tab" onclick="switchTab(this)">🐱 布偶</div>
+                <div class="category-tab" onclick="switchTab(this)">🐕 柯基</div>
+                <div class="category-tab" onclick="switchTab(this)">🐰 异宠</div>
             </div>
 
             <div class="waterfall" id="home-waterfall">
-                <div class="card" onclick="showToast('查看帖子详情')">
-                    <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=400&fit=crop" class="card-img" alt="金毛" onclick="event.stopPropagation();openLightbox(this.src)">
-                    <div class="card-body">
-                        <div class="breed-tag-pill">🐕 金毛犬</div>
-                        <div class="card-title">我家金毛第一次游泳，竟然这么开心！</div>
-                        <div class="card-meta">
-                            <div class="card-author">
-                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&fit=crop" class="card-avatar" alt="">
-                                <span class="card-name">小林铲屎官</span>
-                            </div>
-                            <div class="card-likes" onclick="event.stopPropagation();showToast('已点赞 +1')">❤️ 1.2k</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card" onclick="showToast('查看帖子详情')">
-                    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=500&fit=crop" class="card-img" alt="猫咪" onclick="event.stopPropagation();openLightbox(this.src)">
-                    <div class="card-body">
-                        <div class="expert-badge">👨‍⚕️ 专家</div>
-                        <div class="card-title">布偶猫掉毛严重？这份护理指南请收好</div>
-                        <div class="card-meta">
-                            <div class="card-author">
-                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&fit=crop" class="card-avatar" alt="">
-                                <span class="card-name">王兽医</span>
-                            </div>
-                            <div class="card-likes" onclick="event.stopPropagation();showToast('已点赞 +1')">❤️ 3.5k</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card" onclick="showToast('查看帖子详情')">
-                    <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=350&fit=crop" class="card-img" alt="狗狗" onclick="event.stopPropagation();openLightbox(this.src)">
-                    <div class="card-body">
-                        <div class="breed-tag-pill">🐕 柯基</div>
-                        <div class="card-title">柯基的小短腿也太可爱了吧哈哈哈</div>
-                        <div class="card-meta">
-                            <div class="card-author">
-                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&fit=crop" class="card-avatar" alt="">
-                                <span class="card-name">阿敏喵</span>
-                            </div>
-                            <div class="card-likes" onclick="event.stopPropagation();showToast('已点赞 +1')">❤️ 892</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card" onclick="showToast('查看帖子详情')">
-                    <img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=450&fit=crop" class="card-img" alt="猫咪" onclick="event.stopPropagation();openLightbox(this.src)">
-                    <div class="card-body">
-                        <div class="breed-tag-pill">🐱 英短</div>
-                        <div class="card-title">2个月英短幼猫喂养指南，新手必看</div>
-                        <div class="card-meta">
-                            <div class="card-author">
-                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&fit=crop" class="card-avatar" alt="">
-                                <span class="card-name">养猫老王</span>
-                            </div>
-                            <div class="card-likes" onclick="event.stopPropagation();showToast('已点赞 +1')">❤️ 2.1k</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card" onclick="showToast('查看帖子详情')">
-                    <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=400&h=400&fit=crop" class="card-img" alt="狗狗" onclick="event.stopPropagation();openLightbox(this.src)">
-                    <div class="card-body">
-                        <div class="breed-tag-pill">🐕 柴犬</div>
-                        <div class="card-title">柴犬的倔强是真的！训练日记 Day 1</div>
-                        <div class="card-meta">
-                            <div class="card-author">
-                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&fit=crop" class="card-avatar" alt="">
-                                <span class="card-name">柴柴妈</span>
-                            </div>
-                            <div class="card-likes" onclick="event.stopPropagation();showToast('已点赞 +1')">❤️ 567</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card" onclick="showToast('查看帖子详情')">
-                    <img src="https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=400&h=550&fit=crop" class="card-img" alt="仓鼠" onclick="event.stopPropagation();openLightbox(this.src)">
-                    <div class="card-body">
-                        <div class="breed-tag-pill">🐹 仓鼠</div>
-                        <div class="card-title">仓鼠金丝熊的造景分享，手残党也能做</div>
-                        <div class="card-meta">
-                            <div class="card-author">
-                                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&fit=crop" class="card-avatar" alt="">
-                                <span class="card-name">鼠鼠乐园</span>
-                            </div>
-                            <div class="card-likes" onclick="event.stopPropagation();showToast('已点赞 +1')">❤️ 445</div>
-                        </div>
-                    </div>
-                </div>
+                <!-- 帖子卡片 - 动态生成 -->
             </div>
 
-            <div class="pull-hint">上拉加载更多</div>
+            <div class="pull-hint">上拉加载更多 🐾</div>
         </div>
 
         <!-- ======== 品种百科页 ======== -->
         <div class="page" id="page-breed">
             <div class="page-header">
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <div class="icon-btn" onclick="goBack()" style="margin-right:4px;">←</div>
-                    <div class="title">品种百科</div>
+                <div class="logo">
+                    <div class="logo-icon">📚</div>
+                    <div class="logo-text">品种百科</div>
                 </div>
-                <div class="icon-btn">🔍</div>
+                <div class="header-actions">
+                    <div class="icon-btn">🔍</div>
+                </div>
             </div>
 
             <div class="search-bar">
@@ -798,73 +2321,23 @@ html, body {
                 <input type="text" placeholder="搜索品种名称、别名...">
             </div>
 
-            <div class="category-tabs" style="margin-bottom:4px;">
-                <div class="category-tab active">🐕 犬类</div>
-                <div class="category-tab">🐱 猫类</div>
-                <div class="category-tab">🐰 异宠</div>
+            <div class="category-tabs">
+                <div class="category-tab active" onclick="switchTab(this)">🐕 犬类</div>
+                <div class="category-tab" onclick="switchTab(this)">🐱 猫类</div>
+                <div class="category-tab" onclick="switchTab(this)">🐰 异宠</div>
             </div>
 
             <div class="breed-list">
                 <div class="breed-category-section">
-                    <div class="breed-category-title"><span class="emoji">🏆</span> 热门犬种</div>
-                    <div class="breed-grid">
-                        <div class="breed-item" onclick="goToBreedDetail()">
-                            <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=200&fit=crop" class="breed-item-img" alt="">
-                            <div class="breed-item-name">金毛犬</div>
-                            <div class="breed-item-en">Golden Retriever</div>
-                        </div>
-                        <div class="breed-item" onclick="goToBreedDetail()">
-                            <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=200&fit=crop" class="breed-item-img" alt="">
-                            <div class="breed-item-name">柯基</div>
-                            <div class="breed-item-en">Corgi</div>
-                        </div>
-                        <div class="breed-item" onclick="goToBreedDetail()">
-                            <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=200&fit=crop" class="breed-item-img" alt="">
-                            <div class="breed-item-name">柴犬</div>
-                            <div class="breed-item-en">Shiba Inu</div>
-                        </div>
-                        <div class="breed-item" onclick="goToBreedDetail()">
-                            <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=200&fit=crop" class="breed-item-img" alt="">
-                            <div class="breed-item-name">哈士奇</div>
-                            <div class="breed-item-en">Husky</div>
-                        </div>
-                        <div class="breed-item" onclick="goToBreedDetail()">
-                            <img src="https://images.unsplash.com/photo-1605568427561-40dd23c2acea?w=200&fit=crop" class="breed-item-img" alt="">
-                            <div class="breed-item-name">泰迪</div>
-                            <div class="breed-item-en">Poodle</div>
-                        </div>
-                        <div class="breed-item" onclick="goToBreedDetail()">
-                            <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=200&fit=crop" class="breed-item-img" alt="">
-                            <div class="breed-item-name">法斗</div>
-                            <div class="breed-item-en">French Bulldog</div>
-                        </div>
+                    <div class="breed-category-title"><span>🏆</span> 热门犬种</div>
+                    <div class="breed-grid" id="breed-grid">
+                        <!-- 品种卡片 - 动态生成 -->
                     </div>
                 </div>
 
-                <div class="breed-category-section">
-                    <div class="breed-category-title"><span class="emoji">🐕‍🦺</span> 大型犬</div>
-                    <div class="breed-grid">
-                        <div class="breed-item" onclick="goToBreedDetail()">
-                            <img src="https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=200&fit=crop" class="breed-item-img" alt="">
-                            <div class="breed-item-name">德国牧羊犬</div>
-                            <div class="breed-item-en">German Shepherd</div>
-                        </div>
-                        <div class="breed-item" onclick="goToBreedDetail()">
-                            <img src="https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=200&fit=crop" class="breed-item-img" alt="">
-                            <div class="breed-item-name">阿拉斯加</div>
-                            <div class="breed-item-en">Alaskan Malamute</div>
-                        </div>
-                        <div class="breed-item" onclick="goToBreedDetail()">
-                            <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=200&fit=crop" class="breed-item-img" alt="">
-                            <div class="breed-item-name">拉布拉多</div>
-                            <div class="breed-item-en">Labrador</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="text-align:center;padding:20px 0;">
-                    <div style="font-size:14px;color:var(--med-gray);">🐾 已收录 320+ 品种</div>
-                    <div style="font-size:12px;color:var(--med-gray);margin-top:4px;">持续更新中...</div>
+                <div style="text-align:center;padding:24px 0;">
+                    <div style="font-size:15px;color:var(--text-secondary);">🐾 已收录 320+ 品种</div>
+                    <div style="font-size:13px;color:var(--text-tertiary);margin-top:6px;">持续更新中...</div>
                 </div>
             </div>
         </div>
@@ -879,7 +2352,7 @@ html, body {
                     <div class="breed-hero-name">金毛犬</div>
                     <div class="breed-hero-en">Golden Retriever</div>
                 </div>
-                <div class="breed-hero-fav">🤍</div>
+                <div class="breed-hero-fav" onclick="toggleFav(this)">🤍</div>
             </div>
 
             <div class="breed-info-card">
@@ -892,15 +2365,15 @@ html, body {
                     <div class="badge badge-mint">🇬🇧 英国</div>
                 </div>
 
-                <p style="font-size:13px;color:var(--med-gray);line-height:1.7;margin-bottom:16px;">
+                <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:20px;">
                     金毛寻回犬是最受欢迎的家庭伴侣犬之一，性格温顺友善，对小孩极其耐心，智商高且易于训练。它们需要适量的运动，喜欢水和户外活动。
                 </p>
 
                 <div class="breed-tabs">
-                    <button class="breed-tab active" onclick="switchBreedTab(0)">饮食指南</button>
-                    <button class="breed-tab" onclick="switchBreedTab(1)">健康档案</button>
-                    <button class="breed-tab" onclick="switchBreedTab(2)">护理指南</button>
-                    <button class="breed-tab" onclick="switchBreedTab(3)">社区</button>
+                    <button class="breed-tab active" onclick="switchBreedTab(0, this)">饮食指南</button>
+                    <button class="breed-tab" onclick="switchBreedTab(1, this)">健康档案</button>
+                    <button class="breed-tab" onclick="switchBreedTab(2, this)">护理指南</button>
+                    <button class="breed-tab" onclick="switchBreedTab(3, this)">社区</button>
                 </div>
 
                 <div class="breed-tab-content active" id="breed-tab-0">
@@ -909,7 +2382,7 @@ html, body {
                         <div class="info-card">
                             <div class="info-card-title">推荐食物类型</div>
                             <div class="info-card-text">
-                                <div style="margin-top:8px;">
+                                <div style="margin-top:10px;">
                                     <span class="food-tag">🥩 优质幼犬粮</span>
                                     <span class="food-tag">🍗 鸡胸肉</span>
                                     <span class="food-tag">🥚 水煮蛋</span>
@@ -935,7 +2408,7 @@ html, body {
                     <div class="warning-card">
                         <div class="warning-card-title">⚠️ 禁忌食物</div>
                         <div class="warning-card-text">
-                            <div style="margin-top:6px;">
+                            <div style="margin-top:8px;">
                                 <span class="food-tag forbidden">🍫 巧克力</span>
                                 <span class="food-tag forbidden">🍇 葡萄</span>
                                 <span class="food-tag forbidden">🧅 洋葱</span>
@@ -1006,33 +2479,8 @@ html, body {
                 </div>
 
                 <div class="breed-tab-content" id="breed-tab-3">
-                    <div class="waterfall" style="padding:0;">
-                        <div class="card" onclick="showToast('查看帖子详情')">
-                            <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=400&fit=crop" class="card-img" alt="" onclick="event.stopPropagation();openLightbox(this.src)">
-                            <div class="card-body">
-                                <div class="card-title">我家金毛的第一次游泳经历</div>
-                                <div class="card-meta">
-                                    <div class="card-author">
-                                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&fit=crop" class="card-avatar" alt="">
-                                        <span class="card-name">小林铲屎官</span>
-                                    </div>
-                                    <div class="card-likes" onclick="event.stopPropagation();showToast('已点赞 +1')">❤️ 1.2k</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card" onclick="showToast('查看帖子详情')">
-                            <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=400&h=500&fit=crop" class="card-img" alt="" onclick="event.stopPropagation();openLightbox(this.src)">
-                            <div class="card-body">
-                                <div class="card-title">金毛 vs 拉布拉多，哪个更适合你？</div>
-                                <div class="card-meta">
-                                    <div class="card-author">
-                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&fit=crop" class="card-avatar" alt="">
-                                        <span class="card-name">养宠达人</span>
-                                    </div>
-                                    <div class="card-likes" onclick="event.stopPropagation();showToast('已点赞 +1')">❤️ 2.8k</div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="waterfall" style="padding:0;" id="breed-posts">
+                        <!-- 品种相关帖子 - 动态生成 -->
                     </div>
                 </div>
             </div>
@@ -1045,43 +2493,41 @@ html, body {
 
         <!-- ======== 发布页 ======== -->
         <div class="page" id="page-publish">
-            <div class="page-header" style="border-bottom:1px solid var(--border-gray);">
-                <div class="icon-btn" onclick="goToPage('home')">✕</div>
-                <div class="title" style="font-size:16px;">发布动态</div>
-                <button style="background:var(--warm-orange);color:#fff;border:none;padding:8px 18px;border-radius:var(--radius-pill);font-size:14px;font-weight:600;font-family:var(--font);cursor:pointer;" onclick="goToPage('home')">发布</button>
+            <div class="publish-header">
+                <div class="publish-close" onclick="goToPage('home')">✕</div>
+                <div class="publish-title">发布动态</div>
+                <button class="publish-submit" onclick="publishPost()">发布</button>
             </div>
             <div class="publish-form">
-                <textarea class="publish-textarea" placeholder="分享你家毛孩子的日常...
-🐕 可以分享喂养经验、宠物趣事、问题求助
-📷 添加照片效果更佳"></textarea>
+                <textarea class="publish-textarea" placeholder="分享你家毛孩子的日常...&#10;🐕 可以分享喂养经验、宠物趣事、问题求助&#10;📷 添加照片效果更佳"></textarea>
                 <div class="publish-photos">
-                    <div class="publish-photo-item">+</div>
-                    <div class="publish-photo-item">+</div>
-                    <div class="publish-photo-item">+</div>
+                    <div class="publish-photo-item" onclick="showToast('选择照片')">+</div>
+                    <div class="publish-photo-item" onclick="showToast('选择照片')">+</div>
+                    <div class="publish-photo-item" onclick="showToast('选择照片')">+</div>
                 </div>
                 <div class="publish-options">
-                    <div class="publish-option">
+                    <div class="publish-option" onclick="showToast('选择品种')">
                         <span class="publish-option-icon">🐕</span>
                         <span class="publish-option-text">选择品种</span>
                         <span class="publish-option-value">请选择 ▸</span>
                     </div>
-                    <div class="publish-option">
+                    <div class="publish-option" onclick="showToast('添加话题')">
                         <span class="publish-option-icon">#</span>
                         <span class="publish-option-text">添加话题</span>
                         <span class="publish-option-value">#晒宠日常 ▸</span>
                     </div>
-                    <div class="publish-option">
+                    <div class="publish-option" onclick="showToast('添加位置')">
                         <span class="publish-option-icon">📍</span>
                         <span class="publish-option-text">添加位置</span>
                         <span class="publish-option-value">北京 ▸</span>
                     </div>
-                    <div class="publish-option">
+                    <div class="publish-option" onclick="showToast('设置可见范围')">
                         <span class="publish-option-icon">👁</span>
                         <span class="publish-option-text">可见范围</span>
                         <span class="publish-option-value">公开 ▸</span>
                     </div>
                 </div>
-                <div class="disclaimer" style="margin-top:20px;">
+                <div class="disclaimer" style="margin-top:24px;">
                     <span class="icon">💡</span>
                     <div>发布内容将经过AI审核，请遵守社区规范，禁止发布虐待动物、虚假信息等内容。</div>
                 </div>
@@ -1091,11 +2537,13 @@ html, body {
         <!-- ======== 商城页 ======== -->
         <div class="page" id="page-shop">
             <div class="page-header">
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <div class="icon-btn" onclick="goBack()" style="margin-right:4px;">←</div>
-                    <div class="title">宠物商城</div>
+                <div class="logo">
+                    <div class="logo-icon">🛍️</div>
+                    <div class="logo-text">宠物商城</div>
                 </div>
-                <div class="icon-btn">🛒</div>
+                <div class="header-actions">
+                    <div class="icon-btn">🛒</div>
+                </div>
             </div>
 
             <div class="shop-banner">
@@ -1107,87 +2555,34 @@ html, body {
             </div>
 
             <div class="shop-categories">
-                <div class="shop-cat">
+                <div class="shop-cat" onclick="showToast('主粮分类')">
                     <span class="shop-cat-icon">🥩</span>
                     <span class="shop-cat-name">主粮</span>
                 </div>
-                <div class="shop-cat">
+                <div class="shop-cat" onclick="showToast('零食分类')">
                     <span class="shop-cat-icon">🍖</span>
                     <span class="shop-cat-name">零食</span>
                 </div>
-                <div class="shop-cat">
+                <div class="shop-cat" onclick="showToast('保健分类')">
                     <span class="shop-cat-icon">💊</span>
                     <span class="shop-cat-name">保健</span>
                 </div>
-                <div class="shop-cat">
+                <div class="shop-cat" onclick="showToast('玩具分类')">
                     <span class="shop-cat-icon">🎾</span>
                     <span class="shop-cat-name">玩具</span>
                 </div>
-                <div class="shop-cat">
+                <div class="shop-cat" onclick="showToast('用品分类')">
                     <span class="shop-cat-icon">🛁</span>
                     <span class="shop-cat-name">用品</span>
                 </div>
             </div>
 
-            <div style="padding:0 16px 12px;">
-                <div style="font-size:14px;font-weight:700;color:var(--dark-gray);">🔥 金毛热销推荐</div>
+            <div style="padding:0 16px 14px;">
+                <div style="font-size:16px;font-weight:700;color:var(--text-primary);">🔥 金毛热销推荐</div>
             </div>
 
-            <div class="shop-grid">
-                <div class="shop-card" onclick="showToast('查看商品详情')">
-                    <div class="shop-card-img" style="background:linear-gradient(135deg,#FFE0B2,#FFF8E1);display:flex;align-items:center;justify-content:center;font-size:60px;">🥩</div>
-                    <div class="shop-card-body">
-                        <div class="shop-card-title">金毛幼犬专用粮 15kg</div>
-                        <div class="shop-card-price">
-                            <span class="shop-price-current">¥328</span>
-                            <span class="shop-price-original">¥458</span>
-                        </div>
-                        <div class="shop-card-tags">
-                            <span class="shop-card-tag">适合金毛</span>
-                            <span class="shop-card-tag hot">热销</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="shop-card" onclick="showToast('查看商品详情')">
-                    <div class="shop-card-img" style="background:linear-gradient(135deg,#E8F5E9,#C8E6C9);display:flex;align-items:center;justify-content:center;font-size:60px;">💊</div>
-                    <div class="shop-card-body">
-                        <div class="shop-card-title">宠物关节保护软骨素</div>
-                        <div class="shop-card-price">
-                            <span class="shop-price-current">¥168</span>
-                            <span class="shop-price-original">¥218</span>
-                        </div>
-                        <div class="shop-card-tags">
-                            <span class="shop-card-tag">适合金毛</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="shop-card" onclick="showToast('查看商品详情')">
-                    <div class="shop-card-img" style="background:linear-gradient(135deg,#E3F2FD,#BBDEFB);display:flex;align-items:center;justify-content:center;font-size:60px;">🛁</div>
-                    <div class="shop-card-body">
-                        <div class="shop-card-title">金毛专用去毛护理梳</div>
-                        <div class="shop-card-price">
-                            <span class="shop-price-current">¥89</span>
-                            <span class="shop-price-original">¥129</span>
-                        </div>
-                        <div class="shop-card-tags">
-                            <span class="shop-card-tag">适合金毛</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="shop-card" onclick="showToast('查看商品详情')">
-                    <div class="shop-card-img" style="background:linear-gradient(135deg,#FFF3E0,#FFE0B2);display:flex;align-items:center;justify-content:center;font-size:60px;">🎾</div>
-                    <div class="shop-card-body">
-                        <div class="shop-card-title">耐咬互动飞盘玩具</div>
-                        <div class="shop-card-price">
-                            <span class="shop-price-current">¥45</span>
-                            <span class="shop-price-original">¥69</span>
-                        </div>
-                        <div class="shop-card-tags">
-                            <span class="shop-card-tag">适合金毛</span>
-                            <span class="shop-card-tag hot">热销</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="shop-grid" id="shop-grid">
+                <!-- 商品卡片 - 动态生成 -->
             </div>
         </div>
 
@@ -1201,98 +2596,98 @@ html, body {
                             小林铲屎官
                             <span class="profile-level">Lv.3</span>
                         </div>
-                        <div class="profile-id">ID: 10086 • 北京</div>
+                        <div class="profile-id">ID: 10086 · 北京</div>
                     </div>
-                    <div class="icon-btn" style="background:rgba(255,255,255,0.3);">⚙️</div>
+                    <div class="icon-btn" style="background:rgba(255,255,255,0.5);">⚙️</div>
                 </div>
             </div>
 
             <div class="profile-stats">
-                <div class="profile-stat">
+                <div class="profile-stat" onclick="showToast('查看关注列表')">
                     <div class="profile-stat-value">28</div>
                     <div class="profile-stat-label">关注</div>
                 </div>
-                <div class="profile-stat">
+                <div class="profile-stat" onclick="showToast('查看粉丝列表')">
                     <div class="profile-stat-value">1.2k</div>
                     <div class="profile-stat-label">粉丝</div>
                 </div>
-                <div class="profile-stat">
+                <div class="profile-stat" onclick="showToast('查看获赞')">
                     <div class="profile-stat-value">45</div>
                     <div class="profile-stat-label">获赞</div>
                 </div>
-                <div class="profile-stat">
-                    <div class="profile-stat-value">1,280</div>
+                <div class="profile-stat" onclick="showMemberModal()">
+                    <div class="profile-stat-value" style="color:var(--primary);">1,280</div>
                     <div class="profile-stat-label">积分</div>
                 </div>
             </div>
 
             <div class="profile-menu">
-                <div style="font-size:16px;font-weight:700;color:var(--dark-gray);margin-bottom:12px;">🐕 我的宠物</div>
-                <div class="pet-card">
+                <div class="menu-group-title">🐕 我的宠物</div>
+                <div class="pet-card" onclick="showToast('查看宠物详情')">
                     <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=200&fit=crop" class="pet-card-avatar" alt="">
                     <div class="pet-card-info">
                         <div class="pet-card-name">
                             旺财
-                            <span style="font-size:11px;color:var(--med-gray);margin-left:4px;">♂</span>
+                            <span style="font-size:12px;color:var(--text-tertiary);">♂</span>
                         </div>
-                        <div class="pet-card-breed">金毛犬 • 3个月</div>
+                        <div class="pet-card-breed">金毛犬 · 3个月</div>
                         <div class="pet-card-tags">
                             <span class="pet-card-tag">⚖️ 8.5kg</span>
                             <span class="pet-card-tag">💉 2/3针</span>
                         </div>
                     </div>
-                    <div style="font-size:18px;color:var(--med-gray);">▸</div>
+                    <div style="font-size:18px;color:var(--text-tertiary);">▸</div>
                 </div>
-                <div class="pet-card" style="border:2px dashed var(--border-gray);background:transparent;box-shadow:none;cursor:pointer;">
-                    <div style="width:56px;height:56px;border-radius:var(--radius-md);background:var(--light-gray);display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--med-gray);">+</div>
-                    <div class="pet-card-info">
-                        <div class="pet-card-name" style="color:var(--med-gray);">添加宠物</div>
-                        <div class="pet-card-breed">记录更多毛孩子的成长</div>
+                <div class="pet-card-add" onclick="showToast('添加新宠物')">
+                    <div class="pet-card-add-icon">+</div>
+                    <div>
+                        <div class="pet-card-add-text">添加宠物</div>
+                        <div class="pet-card-add-sub">记录更多毛孩子的成长</div>
                     </div>
                 </div>
 
-                <div class="menu-group" style="margin-top:20px;">
-                    <div class="menu-item">
-                        <div class="menu-icon" style="background:#FFF8E1;">📖</div>
+                <div class="menu-group" style="margin-top:24px;">
+                    <div class="menu-item" onclick="showToast('查看我的帖子')">
+                        <div class="menu-icon" style="background:var(--yellow-light);">📖</div>
                         <div class="menu-text">我的帖子</div>
                         <div class="menu-arrow">▸</div>
                     </div>
-                    <div class="menu-item">
-                        <div class="menu-icon" style="background:#E8F5E9;">⭐</div>
+                    <div class="menu-item" onclick="showToast('查看收藏')">
+                        <div class="menu-icon" style="background:var(--mint-light);">⭐</div>
                         <div class="menu-text">我的收藏</div>
                         <div class="menu-arrow">▸</div>
                     </div>
-                    <div class="menu-item">
-                        <div class="menu-icon" style="background:#E3F2FD;">🛒</div>
+                    <div class="menu-item" onclick="showToast('查看订单')">
+                        <div class="menu-icon" style="background:var(--sky-light);">🛒</div>
                         <div class="menu-text">我的订单</div>
                         <div class="menu-arrow">▸</div>
                     </div>
                 </div>
                 <div class="menu-group">
-                    <div class="menu-item">
-                        <div class="menu-icon" style="background:#FCE4EC;">🎁</div>
+                    <div class="menu-item" onclick="showMemberModal()">
+                        <div class="menu-icon" style="background:linear-gradient(135deg, #FFD700, #FFA500);">👑</div>
+                        <div class="menu-text">开通会员</div>
+                        <div class="menu-arrow" style="color:var(--primary);font-weight:600;">▸</div>
+                    </div>
+                    <div class="menu-item" onclick="showToast('积分商城')">
+                        <div class="menu-icon" style="background:var(--pink-light);">🎁</div>
                         <div class="menu-text">积分商城</div>
                         <div class="menu-arrow">▸</div>
                     </div>
-                    <div class="menu-item">
-                        <div class="menu-icon" style="background:#F3E5F5;">🏥</div>
+                    <div class="menu-item" onclick="showToast('附近宠物医院')">
+                        <div class="menu-icon" style="background:var(--lavender-light);">🏥</div>
                         <div class="menu-text">附近宠物医院</div>
-                        <div class="menu-arrow">▸</div>
-                    </div>
-                    <div class="menu-item">
-                        <div class="menu-icon" style="background:#E0F2F1;">🎓</div>
-                        <div class="menu-text">申请专家认证</div>
                         <div class="menu-arrow">▸</div>
                     </div>
                 </div>
                 <div class="menu-group">
-                    <div class="menu-item">
-                        <div class="menu-icon" style="background:#FFF3E0;">💬</div>
+                    <div class="menu-item" onclick="showToast('帮助与反馈')">
+                        <div class="menu-icon" style="background:var(--primary-bg);">💬</div>
                         <div class="menu-text">帮助与反馈</div>
                         <div class="menu-arrow">▸</div>
                     </div>
-                    <div class="menu-item">
-                        <div class="menu-icon" style="background:#ECEFF1;">📋</div>
+                    <div class="menu-item" onclick="showToast('关于傻毛宠物')">
+                        <div class="menu-icon" style="background:var(--bg-tertiary);">📋</div>
                         <div class="menu-text">关于傻毛宠物</div>
                         <div class="menu-arrow">▸</div>
                     </div>
@@ -1300,13 +2695,14 @@ html, body {
             </div>
         </div>
 
-        <!-- ======== AI 对话页（全新设计） ======== -->
+        <!-- ======== AI 对话页 ======== -->
         <div class="page-ai" id="page-ai">
             <div class="ai-header">
                 <button class="ai-header-back" onclick="goBack()">←</button>
                 <div class="ai-header-avatar">🐱</div>
                 <div class="ai-header-name">傻毛</div>
                 <div class="ai-header-subtitle">你的养宠小助手</div>
+                <div class="ai-header-badge">✨ AI智能问答</div>
             </div>
 
             <div class="ai-chat-area" id="chat-area">
@@ -1355,12 +2751,12 @@ html, body {
 
             <div class="ai-input-area">
                 <div class="ai-quick-chips">
-                    <button class="ai-chip" onclick="sendQuick('金毛不能吃什么？')">金毛不能吃什么？</button>
-                    <button class="ai-chip" onclick="sendQuick('推荐适合金毛的狗粮')">推荐适合金毛的狗粮</button>
-                    <button class="ai-chip" onclick="sendQuick('金毛幼犬训练方法')">金毛幼犬训练方法</button>
+                    <button class="ai-chip" onclick="sendQuick(this.textContent)">金毛不能吃什么？</button>
+                    <button class="ai-chip" onclick="sendQuick(this.textContent)">推荐适合金毛的狗粮</button>
+                    <button class="ai-chip" onclick="sendQuick(this.textContent)">金毛幼犬训练方法</button>
+                    <button class="ai-chip" onclick="sendQuick(this.textContent)">猫咪不吃东西怎么办</button>
                 </div>
                 <div class="ai-input-bar">
-                    <button class="mic-btn">🎤</button>
                     <input type="text" placeholder="问点什么..." id="ai-input">
                     <button class="send-btn" onclick="sendMessage()">➤</button>
                 </div>
@@ -1376,10 +2772,10 @@ html, body {
             <span class="nav-label">首页</span>
         </div>
         <div class="nav-item" data-page="breed" onclick="goToPage('breed')">
-            <span class="nav-icon">🐾</span>
-            <span class="nav-label">品种</span>
+            <span class="nav-icon">📚</span>
+            <span class="nav-label">百科</span>
         </div>
-        <div class="nav-center-btn" onclick="goToPage('publish')">+</div>
+        <div class="nav-ai-btn" onclick="goToAI()">🐱</div>
         <div class="nav-item" data-page="shop" onclick="goToPage('shop')">
             <span class="nav-icon">🛍️</span>
             <span class="nav-label">商城</span>
@@ -1401,9 +2797,154 @@ html, body {
         <button class="lightbox-close" onclick="closeLightbox(event)">✕</button>
         <img id="lightbox-img" src="" alt="预览">
     </div>
+
+    <!-- 会员弹窗 -->
+    <div class="modal-overlay" id="member-modal" onclick="closeMemberModal(event)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">开通会员</div>
+                <div class="modal-close" onclick="closeMemberModal()">✕</div>
+            </div>
+
+            <div class="member-card">
+                <div class="member-card-title">傻毛会员</div>
+                <div class="member-card-desc">无限AI问答，专业养宠顾问</div>
+                <div class="member-price">
+                    <span class="member-price-current">¥9.9</span>
+                    <span class="member-price-unit">/首月</span>
+                    <span class="member-price-original">¥29.9/月</span>
+                </div>
+            </div>
+
+            <div class="member-features">
+                <div class="member-feature">
+                    <div class="member-feature-icon">🤖</div>
+                    <div class="member-feature-text">
+                        <div class="member-feature-title">无限AI问答</div>
+                        <div class="member-feature-desc">每天不限次数，随时问傻毛</div>
+                    </div>
+                </div>
+                <div class="member-feature">
+                    <div class="member-feature-icon">📊</div>
+                    <div class="member-feature-text">
+                        <div class="member-feature-title">详细分析报告</div>
+                        <div class="member-feature-desc">AI回答更详细，包含步骤和图表</div>
+                    </div>
+                </div>
+                <div class="member-feature">
+                    <div class="member-feature-icon">🎤</div>
+                    <div class="member-feature-text">
+                        <div class="member-feature-title">语音输入</div>
+                        <div class="member-feature-desc">不方便打字时，直接说话问</div>
+                    </div>
+                </div>
+                <div class="member-feature">
+                    <div class="member-feature-icon">📚</div>
+                    <div class="member-feature-text">
+                        <div class="member-feature-title">历史记录永久保存</div>
+                        <div class="member-feature-desc">随时回顾之前的问答</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="member-cta" onclick="showToast('开通成功！首月仅需9.9元')">
+                立即开通 · 首月9.9元
+            </button>
+        </div>
+    </div>
 </div>
 
 <script>
+// ========================================
+// 数据
+// ========================================
+const postsData = [
+    {
+        id: 1,
+        image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=400&fit=crop',
+        title: '我家金毛第一次游泳，竟然这么开心！',
+        breed: '🐕 金毛犬',
+        author: '小林铲屎官',
+        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&fit=crop',
+        likes: '1.2k'
+    },
+    {
+        id: 2,
+        image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=500&fit=crop',
+        title: '布偶猫掉毛严重？这份护理指南请收好',
+        breed: '🐱 布偶猫',
+        author: '王兽医',
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&fit=crop',
+        likes: '3.5k',
+        isExpert: true
+    },
+    {
+        id: 3,
+        image: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=350&fit=crop',
+        title: '柯基的小短腿也太可爱了吧哈哈哈',
+        breed: '🐕 柯基',
+        author: '阿敏喵',
+        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&fit=crop',
+        likes: '892'
+    },
+    {
+        id: 4,
+        image: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=450&fit=crop',
+        title: '2个月英短幼猫喂养指南，新手必看',
+        breed: '🐱 英短',
+        author: '养猫老王',
+        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&fit=crop',
+        likes: '2.1k'
+    },
+    {
+        id: 5,
+        image: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=400&h=400&fit=crop',
+        title: '柴犬的倔强是真的！训练日记 Day 1',
+        breed: '🐕 柴犬',
+        author: '柴柴妈',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&fit=crop',
+        likes: '567'
+    },
+    {
+        id: 6,
+        image: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=400&h=550&fit=crop',
+        title: '仓鼠金丝熊的造景分享，手残党也能做',
+        breed: '🐹 仓鼠',
+        author: '鼠鼠乐园',
+        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&fit=crop',
+        likes: '445'
+    }
+];
+
+const breedsData = [
+    { name: '金毛犬', en: 'Golden Retriever', image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=200&fit=crop' },
+    { name: '柯基', en: 'Corgi', image: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=200&fit=crop' },
+    { name: '柴犬', en: 'Shiba Inu', image: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=200&fit=crop' },
+    { name: '哈士奇', en: 'Husky', image: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=200&fit=crop' },
+    { name: '泰迪', en: 'Poodle', image: 'https://images.unsplash.com/photo-1605568427561-40dd23c2acea?w=200&fit=crop' },
+    { name: '法斗', en: 'French Bulldog', image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=200&fit=crop' },
+    { name: '德牧', en: 'German Shepherd', image: 'https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=200&fit=crop' },
+    { name: '阿拉斯加', en: 'Alaskan Malamute', image: 'https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=200&fit=crop' },
+    { name: '拉布拉多', en: 'Labrador', image: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=200&fit=crop' }
+];
+
+const shopData = [
+    { emoji: '🥩', title: '金毛幼犬专用粮 15kg', price: '¥328', original: '¥458', tags: ['适合金毛', '热销'], hot: true },
+    { emoji: '💊', title: '宠物关节保护软骨素', price: '¥168', original: '¥218', tags: ['适合金毛'], hot: false },
+    { emoji: '🛁', title: '金毛专用去毛护理梳', price: '¥89', original: '¥129', tags: ['适合金毛'], hot: false },
+    { emoji: '🎾', title: '耐咬互动飞盘玩具', price: '¥45', original: '¥69', tags: ['适合金毛', '热销'], hot: true }
+];
+
+const aiResponses = {
+    '金毛不能吃什么？': '金毛犬不能吃以下食物：<br><br>🚫 <strong>绝对禁忌：</strong><br>• <strong>巧克力</strong> - 含可可碱，会导致中毒<br>• <strong>葡萄/葡萄干</strong> - 可能导致肾衰竭<br>• <strong>洋葱/大蒜</strong> - 破坏红细胞<br>• <strong>鸡骨头</strong> - 容易刺伤消化道<br>• <strong>酒精</strong> - 对肝脏伤害极大<br><br>⚠️ <strong>需要注意：</strong><br>• 牛奶 - 很多狗乳糖不耐受<br>• 生鸡蛋 - 可能有细菌<br>• 高盐食物 - 增加肾脏负担',
+    '推荐适合金毛的狗粮': '为金毛推荐以下几款狗粮：<br><br>🥇 <strong>高端推荐：</strong><br>• 渴望（Orijen）- 全犬种适用，蛋白质含量高<br>• 爱肯拿（Acana）- 性价比高，配方优秀<br><br>🥈 <strong>中端推荐：</strong><br>• 皇家（Royal Canin）金毛专用粮<br>• 冠能（Pro Plan）大型犬粮<br><br>🥉 <strong>性价比推荐：</strong><br>• 网易严选全价犬粮<br>• 伯纳天纯<br><br>💡 <strong>选购建议：</strong><br>• 看配料表，前三位应是肉类<br>• 蛋白质含量建议25%以上<br>• 根据金毛年龄选择对应阶段的粮',
+    '金毛幼犬训练方法': '金毛幼犬训练指南：<br><br>📅 <strong>训练时间：</strong><br>• 3-6个月是黄金训练期<br>• 每次训练5-10分钟，每天2-3次<br><br>🎓 <strong>基础训练顺序：</strong><br>1. <strong>坐下</strong> - 最基础的指令<br>2. <strong>握手</strong> - 增进互动<br>3. <strong>趴下</strong> - 进阶指令<br>4. <strong>等待</strong> - 培养耐心<br>5. <strong>召回</strong> - 最重要的安全指令<br><br>✅ <strong>训练技巧：</strong><br>• 使用正向激励，零食+夸奖<br>• 口令简短一致<br>• 在安静环境开始，逐渐增加干扰<br>• 金毛智商高，通常5-10次就能学会',
+    '猫咪不吃东西怎么办': '猫咪不吃东西的排查方法：<br><br>🔍 <strong>先判断原因：</strong><br><br>1️⃣ <strong>食物问题</strong><br>• 刚换粮？需要7天过渡期<br>• 食物变质？检查保质期<br><br>2️⃣ <strong>环境问题</strong><br>• 食碗位置是否安静<br>• 是否有其他宠物抢食<br><br>3️⃣ <strong>健康问题</strong><br>• 口腔疾病（牙龈红肿）<br>• 肠胃不适（呕吐、腹泻）<br>• 发情期食欲下降<br><br>🏥 <strong>需要就医的情况：</strong><br>• 超过24小时不吃东西<br>• 伴随精神萎靡<br>• 呕吐或腹泻<br>• 成年猫超过48小时不进食'
+};
+
+// ========================================
+// 页面逻辑
+// ========================================
 let currentPage = 'home';
 let pageHistory = [];
 
@@ -1413,7 +2954,7 @@ function goToPage(page) {
 
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.page-ai').forEach(p => p.classList.remove('active'));
-    
+
     const target = document.getElementById('page-' + page);
     if (target) target.classList.add('active');
 
@@ -1425,7 +2966,7 @@ function goToPage(page) {
 
     const bottomNav = document.getElementById('bottom-nav');
     const floatBtn = document.getElementById('ai-float-btn');
-    
+
     if (page === 'publish' || page === 'breed-detail' || page === 'ai') {
         bottomNav.style.display = 'none';
     } else {
@@ -1456,6 +2997,12 @@ function goToAI() {
     const floatBtn = document.getElementById('ai-float-btn');
     if (floatBtn) floatBtn.style.display = 'none';
     currentPage = 'ai';
+
+    // 滚动到底部
+    setTimeout(() => {
+        const chatArea = document.getElementById('chat-area');
+        chatArea.scrollTop = chatArea.scrollHeight;
+    }, 100);
 }
 
 function goBack() {
@@ -1484,7 +3031,12 @@ function goBack() {
     }
 }
 
-function switchBreedTab(index) {
+function switchTab(el) {
+    el.parentElement.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+}
+
+function switchBreedTab(index, el) {
     document.querySelectorAll('.breed-tab').forEach((tab, i) => {
         tab.classList.toggle('active', i === index);
     });
@@ -1493,6 +3045,19 @@ function switchBreedTab(index) {
     });
 }
 
+function toggleFav(el) {
+    if (el.textContent === '🤍') {
+        el.textContent = '❤️';
+        showToast('已收藏');
+    } else {
+        el.textContent = '🤍';
+        showToast('已取消收藏');
+    }
+}
+
+// ========================================
+// AI对话
+// ========================================
 function sendQuick(text) {
     document.getElementById('ai-input').value = text;
     sendMessage();
@@ -1504,6 +3069,8 @@ function sendMessage() {
     if (!text) return;
 
     const chatArea = document.getElementById('chat-area');
+
+    // 添加用户消息
     const userMsg = document.createElement('div');
     userMsg.className = 'chat-message user';
     userMsg.innerHTML = '<div class="chat-bubble user">' + escapeHtml(text) + '</div>';
@@ -1511,22 +3078,27 @@ function sendMessage() {
     input.value = '';
     chatArea.scrollTop = chatArea.scrollHeight;
 
+    // 添加加载动画
     const loading = document.createElement('div');
     loading.className = 'chat-message';
     loading.id = 'ai-loading';
-    loading.innerHTML = '<div class="chat-avatar">🐱</div><div><div class="ai-loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div>';
+    loading.innerHTML = '<div class="chat-avatar">🐱</div><div><div class="ai-loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>';
     chatArea.appendChild(loading);
     chatArea.scrollTop = chatArea.scrollHeight;
 
+    // 模拟AI回复
     setTimeout(() => {
         const ld = document.getElementById('ai-loading');
         if (ld) ld.remove();
+
+        let response = aiResponses[text] || '收到你的问题！<br><br>在真实产品中，这里会接入基于 RAG 架构的大模型，结合品种知识库给出专业、准确的回答。<br><br>你可以继续问我关于宠物喂养、健康、训练等方面的问题！';
+
         const aiMsg = document.createElement('div');
         aiMsg.className = 'chat-message';
-        aiMsg.innerHTML = '<div class="chat-avatar">🐱</div><div><div class="chat-bubble ai">收到你的问题！<br><br>在真实产品中，这里会接入基于 RAG 架构的大模型，结合品种知识库给出专业、准确的回答。<br><br>你可以继续问我关于宠物喂养、健康、训练等方面的问题！</div><div class="chat-source"><span>📚</span> 来源：傻毛AI知识库</div><div class="chat-disclaimer">⚠️ 本回答仅供参考，不能替代专业兽医诊疗。</div></div></div>';
+        aiMsg.innerHTML = '<div class="chat-avatar">🐱</div><div><div class="chat-bubble ai">' + response + '</div><div class="chat-source"><span>📚</span> 来源：傻毛AI知识库</div><div class="chat-disclaimer">⚠️ 本回答仅供参考，不能替代专业兽医诊疗。</div></div>';
         chatArea.appendChild(aiMsg);
         chatArea.scrollTop = chatArea.scrollHeight;
-    }, 1500);
+    }, 1200 + Math.random() * 800);
 }
 
 function escapeHtml(text) {
@@ -1535,6 +3107,29 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
+// ========================================
+// 发布功能
+// ========================================
+function publishPost() {
+    showToast('发布成功！');
+    setTimeout(() => goToPage('home'), 1000);
+}
+
+// ========================================
+// 会员弹窗
+// ========================================
+function showMemberModal() {
+    document.getElementById('member-modal').classList.add('active');
+}
+
+function closeMemberModal(e) {
+    if (e && e.target !== e.currentTarget && !e.target.closest('.modal-close')) return;
+    document.getElementById('member-modal').classList.remove('active');
+}
+
+// ========================================
+// Toast提示
+// ========================================
 function showToast(message) {
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
@@ -1544,6 +3139,9 @@ function showToast(message) {
     setTimeout(() => toast.remove(), 3000);
 }
 
+// ========================================
+// 图片预览
+// ========================================
 function openLightbox(src) {
     document.getElementById('lightbox-img').src = src;
     document.getElementById('lightbox').classList.add('active');
@@ -1554,15 +3152,91 @@ function closeLightbox(e) {
     document.getElementById('lightbox').classList.remove('active');
 }
 
-document.querySelectorAll('.category-tab').forEach(tab => {
-    tab.addEventListener('click', function() {
-        this.parentElement.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-    });
-});
+// ========================================
+// 初始化渲染
+// ========================================
+function renderPosts() {
+    const waterfall = document.getElementById('home-waterfall');
+    waterfall.innerHTML = postsData.map(post => `
+        <div class="card" onclick="showToast('查看帖子详情')">
+            <img src="${post.image}" class="card-img" alt="${post.title}" onclick="event.stopPropagation();openLightbox(this.src)">
+            <div class="card-body">
+                <div class="card-breed-tag">${post.breed}</div>
+                ${post.isExpert ? '<div style="display:inline-block;padding:3px 8px;background:var(--sky-light);color:#1976D2;border-radius:var(--radius-pill);font-size:11px;font-weight:600;margin-bottom:6px;">👨‍⚕️ 专家</div>' : ''}
+                <div class="card-title">${post.title}</div>
+                <div class="card-meta">
+                    <div class="card-author">
+                        <img src="${post.avatar}" class="card-avatar" alt="">
+                        <span class="card-name">${post.author}</span>
+                    </div>
+                    <div class="card-likes" onclick="event.stopPropagation();this.innerHTML='❤️ ' + (parseInt(this.textContent.replace('❤️ ','').replace('k','000')) + 1)">❤️ ${post.likes}</div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
 
+function renderBreeds() {
+    const grid = document.getElementById('breed-grid');
+    grid.innerHTML = breedsData.map(breed => `
+        <div class="breed-item" onclick="goToBreedDetail()">
+            <img src="${breed.image}" class="breed-item-img" alt="">
+            <div class="breed-item-name">${breed.name}</div>
+            <div class="breed-item-en">${breed.en}</div>
+        </div>
+    `).join('');
+}
+
+function renderShop() {
+    const grid = document.getElementById('shop-grid');
+    grid.innerHTML = shopData.map(item => `
+        <div class="shop-card" onclick="showToast('查看商品详情')">
+            <div class="shop-card-img" style="background:linear-gradient(135deg,var(--primary-bg),var(--yellow-light));display:flex;align-items:center;justify-content:center;">${item.emoji}</div>
+            <div class="shop-card-body">
+                <div class="shop-card-title">${item.title}</div>
+                <div class="shop-card-price">
+                    <span class="shop-price-current">${item.price}</span>
+                    <span class="shop-price-original">${item.original}</span>
+                </div>
+                <div class="shop-card-tags">
+                    ${item.tags.map(tag => `<span class="shop-card-tag${item.hot && tag === '热销' ? ' hot' : ''}">${tag}</span>`).join('')}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderBreedPosts() {
+    const container = document.getElementById('breed-posts');
+    const breedPosts = postsData.filter(p => p.breed.includes('金毛')).slice(0, 2);
+    container.innerHTML = breedPosts.map(post => `
+        <div class="card" onclick="showToast('查看帖子详情')">
+            <img src="${post.image}" class="card-img" alt="" onclick="event.stopPropagation();openLightbox(this.src)">
+            <div class="card-body">
+                <div class="card-title">${post.title}</div>
+                <div class="card-meta">
+                    <div class="card-author">
+                        <img src="${post.avatar}" class="card-avatar" alt="">
+                        <span class="card-name">${post.author}</span>
+                    </div>
+                    <div class="card-likes" onclick="event.stopPropagation();showToast('已点赞')">❤️ ${post.likes}</div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// 键盘事件
 document.getElementById('ai-input').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') sendMessage();
+});
+
+// 初始化
+document.addEventListener('DOMContentLoaded', function() {
+    renderPosts();
+    renderBreeds();
+    renderShop();
+    renderBreedPosts();
 });
 </script>
 
